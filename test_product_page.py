@@ -33,3 +33,24 @@ def test_guest_can_add_product_to_basket(browser, promo_code):
     product_page.should_see_product_name_identical_to_message(product_name)
     product_price = product_page.find_product_price()
     product_page.should_see_product_price_identical_to_message(product_price)
+
+@pytest.mark.xfail
+def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
+    product_page = ProductPage(browser, PRODUCT_URL)
+    product_page.open()
+    product_page.click_add_to_basket_button()
+    product_page.solve_quiz_and_get_code()
+    product_page.should_not_be_success_message()
+
+def test_guest_cant_see_success_message(browser):
+    product_page = ProductPage(browser, PRODUCT_URL)
+    product_page.open()
+    product_page.should_not_be_success_message()
+
+@pytest.mark.xfail
+def test_message_disappeared_after_adding_product_to_basket(browser):
+    product_page = ProductPage(browser, PRODUCT_URL)
+    product_page.open()
+    product_page.click_add_to_basket_button()
+    product_page.solve_quiz_and_get_code()
+    product_page.should_success_message_disappear()
