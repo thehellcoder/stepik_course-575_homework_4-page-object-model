@@ -2,11 +2,13 @@
 from random import shuffle
 import pytest
 from pages.product_page import ProductPage
+from pages.login_page import LoginPage
 
 PRODUCT_URL = ''
 products = [
     'the-shellcoders-handbook_209/?promo=newYear',
-    'coders-at-work_207/?promo=newYear2019'
+    'coders-at-work_207/?promo=newYear2019',
+    'the-city-and-the-stars_95/'
 ]
 shuffle(products)
 PRODUCT_URL = 'http://selenium1py.pythonanywhere.com/catalogue/' + products[0]
@@ -54,3 +56,15 @@ def test_message_disappeared_after_adding_product_to_basket(browser):
     product_page.click_add_to_basket_button()
     product_page.solve_quiz_and_get_code()
     product_page.should_success_message_disappear()
+
+def test_guest_should_see_login_link_on_product_page(browser):
+    product_page = ProductPage(browser, PRODUCT_URL)
+    product_page.open()
+    product_page.should_be_login_link()
+
+def test_guest_can_go_to_login_page_from_product_page(browser):
+    product_page = ProductPage(browser, PRODUCT_URL)
+    product_page.open()
+    product_page.go_to_login_page()
+    login_page = LoginPage(browser, browser.current_url)
+    login_page.should_be_login_page()
